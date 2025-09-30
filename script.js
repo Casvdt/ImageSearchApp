@@ -21,6 +21,8 @@ function trackDownload(result) {
         // no-op
     }
 
+}
+
 // Modal elements and state
 const modalEl = document.getElementById("image-modal");
 const modalImg = document.getElementById("modal-image");
