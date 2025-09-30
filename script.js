@@ -129,8 +129,12 @@ document.addEventListener("keydown", (e) => {
 if (modalDownloadBtn) {
     modalDownloadBtn.addEventListener("click", async () => {
         if (!currentResult) return;
-        // Track the download per Unsplash guidelines
-        trackDownload(currentResult);
+
+        // 1) Register the download with Unsplash (required)
+        try { trackDownload(currentResult); } catch {}
+
+        // 2) Resolve a downloadable URL
+        let downloadUrl = null;
         try {
             const downloadLocation = currentResult && currentResult.links && currentResult.links.download_location;
             if (downloadLocation) {
@@ -141,17 +145,39 @@ if (modalDownloadBtn) {
                 if (res.ok) {
                     const json = await res.json();
                     if (json && json.url) {
-                        window.open(json.url, "_blank", "noopener,noreferrer");
-                        return;
+                        downloadUrl = json.url; // usually a redirect to the asset
                     }
                 }
             }
-        } catch (err) {
-            // ignore and fallback
+        } catch {}
+        if (!downloadUrl) {
+            downloadUrl = (currentResult.links && currentResult.links.download) || (currentResult.urls && currentResult.urls.full) || (currentResult.urls && currentResult.urls.raw) || (currentResult.urls && currentResult.urls.regular);
         }
-        const directDownload = currentResult.links && currentResult.links.download;
-        if (directDownload) {
-            window.open(directDownload, "_blank", "noopener,noreferrer");
+        if (!downloadUrl) return;
+
+        // 3) Fetch the image as a Blob and trigger a programmatic download (no new tab)
+        try {
+            const resp = await fetch(downloadUrl, { mode: 'cors' });
+            if (!resp.ok) throw new Error('Download fetch failed');
+            const blob = await resp.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const defaultName = (currentResult.slug || currentResult.id || 'unsplash-image') + '.jpg';
+            a.href = blobUrl;
+            a.download = defaultName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+        } catch (e) {
+            // As a last resort, navigate the browser which should trigger a download
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.target = '_self';
+            a.rel = 'noopener noreferrer';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
         }
     });
 }
