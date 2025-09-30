@@ -60,6 +60,83 @@ body {
     line-height: 1.6;
 }
 
+/* Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 1000;
+}
+
+.modal.open {
+    display: block;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    margin: 5vh auto 0;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: #666;
+}
+
+#modal-image {
+    max-width: 80vw;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.modal-actions .btn {
+    padding: 10px 16px;
+    background-color: #1761a7;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0,0,0,0.15);
+}
+
+.modal-actions .btn:hover { opacity: 0.9; }
+
+.modal-actions .link {
+    color: #1761a7;
+    text-decoration: none;
+}
+
+.modal-actions .link:hover { text-decoration: underline; }
+
 h1 {
     font-size: 36px;
     font-weight: bold;

@@ -12,13 +12,39 @@
     <h1>Image Search App</h1>
     <form action="">
         <input type="text" id="search-input" placeholder="Search for images...">
-        <button class="search-button">Search</button>
+        <button class="search-button" type="submit">Search</button>
     </form>
     <div class="search-results"></div>
 
     <button class="show-more-button" type="button" style="display: none;">Show more</button>
 
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p class="footer-copy">© 2025 Cas van der Toorn. All rights reserved.</p>
+            <div class="footer-translate">
+                <span class="translate-label">Translate:</span>
+                <div id="google_translate_element"></div>
+            </div>
+            <p class="footer-attr">
+                <a href="https://www.flaticon.com/free-icons/gallery" title="gallery icons" target="_blank" rel="noopener noreferrer">Gallery icons created by Superndre - Flaticon</a>
+            </p>
+        </div>
     </footer>
 
+    <!-- Image Modal -->
+    <div id="image-modal" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" data-close="true"></div>
+        <div class="modal-dialog" role="dialog" aria-modal="true">
+            <button class="modal-close" type="button" aria-label="Close" data-close="true">×</button>
+            <img id="modal-image" alt="Selected image preview" />
+            <div class="modal-actions">
+                <button id="modal-download" class="btn" type="button">Download</button>
+                <a id="modal-view" class="link" href="#" target="_blank" rel="noopener noreferrer">View on Unsplash</a>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+    
+</body>
 </html>

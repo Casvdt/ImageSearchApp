@@ -20,6 +20,32 @@ function trackDownload(result) {
     } catch (e) {
         // no-op
     }
+
+// Modal elements and state
+const modalEl = document.getElementById("image-modal");
+const modalImg = document.getElementById("modal-image");
+const modalDownloadBtn = document.getElementById("modal-download");
+const modalViewLink = document.getElementById("modal-view");
+let currentResult = null;
+
+function openModal(result) {
+    currentResult = result;
+    // Use a larger preview for modal
+    const previewUrl = (result.urls && (result.urls.regular || result.urls.small)) || result.urls?.small;
+    modalImg.src = previewUrl;
+    modalImg.alt = result.alt_description || result.description || "Unsplash Image";
+    const photoPageUrl = `${result.links.html}?utm_source=ImageSearchApp&utm_medium=referral`;
+    modalViewLink.href = photoPageUrl;
+    modalEl.setAttribute("aria-hidden", "false");
+    modalEl.classList.add("open");
+}
+
+function closeModal() {
+    modalEl.classList.remove("open");
+    modalEl.setAttribute("aria-hidden", "true");
+    // Clear to avoid showing old image briefly next open
+    modalImg.src = "";
+    currentResult = null;
 }
 
 async function searchImages(){
@@ -46,9 +72,8 @@ async function searchImages(){
         imageLink.rel = "noopener noreferrer";
         imageLink.textContent= result.alt_description || "View on Unsplash";
 
-        // Trigger Unsplash download tracking when user interacts with the photo
-        image.addEventListener("click", () => trackDownload(result));
-        imageLink.addEventListener("click", () => trackDownload(result));
+        // Open modal on image click; keep link for viewing on Unsplash
+        image.addEventListener("click", () => openModal(result));
 
         // Build attribution: "Photo by <Photographer> on Unsplash"
         const photographerName = (result.user && (result.user.name || [result.user.first_name, result.user.last_name].filter(Boolean).join(" "))) || "Unsplash Contributor";
@@ -77,10 +102,36 @@ async function searchImages(){
 
  formEl.addEventListener("submit", (event)=>{
         event.preventDefault();
-        page=1;
+        page = 1;
         searchImages();
     });
 
     showMoreBtn.addEventListener("click", ()=>{
         searchImages();
     });
+
+// Modal interactions
+document.addEventListener("click", (e) => {
+    const target = e.target;
+    if (target && target.hasAttribute && target.hasAttribute("data-close")) {
+        closeModal();
+    }
+});
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modalEl.classList.contains("open")) {
+        closeModal();
+    }
+});
+
+if (modalDownloadBtn) {
+    modalDownloadBtn.addEventListener("click", async () => {
+        if (!currentResult) return;
+        // Track download and then open the download link in a new tab
+        trackDownload(currentResult);
+        const directDownload = currentResult.links && currentResult.links.download;
+        if (directDownload) {
+            window.open(directDownload, "_blank", "noopener,noreferrer");
+        }
+    });
+}
