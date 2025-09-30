@@ -128,14 +128,30 @@ document.addEventListener("keydown", (e) => {
 
 if (modalDownloadBtn) {
     modalDownloadBtn.addEventListener("click", async () => {
-    if (!currentResult) return;
-    // Track the download per Unsplash guidelines
-    trackDownload(currentResult);
-    try {
-        const downloadLocation = currentResult && currentResult.links && currentResult.links.download_location;
-        if (downloadLocation) {
-            const apiUrl = downloadLocation.includes("?")
-    ? ${downloadLocation}&client_id=
-    : ${downloadLocation}?client_id=;
+        if (!currentResult) return;
+        // Track the download per Unsplash guidelines
+        trackDownload(currentResult);
+        try {
+            const downloadLocation = currentResult && currentResult.links && currentResult.links.download_location;
+            if (downloadLocation) {
+                const apiUrl = downloadLocation.includes("?")
+                    ? `${downloadLocation}&client_id=${accesKey}`
+                    : `${downloadLocation}?client_id=${accesKey}`;
+                const res = await fetch(apiUrl);
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json && json.url) {
+                        window.open(json.url, "_blank", "noopener,noreferrer");
+                        return;
+                    }
+                }
+            }
+        } catch (err) {
+            // ignore and fallback
+        }
+        const directDownload = currentResult.links && currentResult.links.download;
+        if (directDownload) {
+            window.open(directDownload, "_blank", "noopener,noreferrer");
+        }
+    });
 }
-
