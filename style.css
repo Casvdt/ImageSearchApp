@@ -50,45 +50,14 @@ form {
 
 .search-results {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .search-result {
     margin-bottom: 60px;
-    width: 30%;
-    height: 100%;
-    border-radius: 5px;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-}
-
-.search-result img {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
-    transition: all 0.2s ease-in-out;
-}
-
-.search-result:hover img {
-    opacity: 0.8;
-}
-
-.search-result a {
-    font-size: 20px;
-    text-decoration: none;
-    color: #333;
-    display: block;
-    padding: 10px;
-    text-transform: capitalize;
-}
-
-.show-more-button {
-    display: block;
-    margin: 40px auto;
-    padding: 10px 20px;
+    height: 100%;
     background-color: #1761a7;
     color: #fff;
     border: none;
