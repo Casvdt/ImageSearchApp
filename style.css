@@ -48,6 +48,24 @@ form {
     margin-left: 10px;
 }
 
+/* Show more button: hidden by default and styled like the search button */
+.show-more-button {
+    display: none; /* will be set to block by JS after first page */
+    padding: 10px 20px;
+    background-color: #1761a7;
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 20px auto 60px; /* center horizontally with auto margins */
+}
+
+.show-more-button:hover {
+    opacity: 0.9;
+}
+
 .search-results {
     display: flex;
     justify-content: space-between;
