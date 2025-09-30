@@ -22,14 +22,30 @@ async function searchImages(){
         imageWrapper.classList.add("search-result");
         const image = document.createElement("img");
         image.src= result.urls.small;
-        image.alt= result.alt_description;
+        image.alt= result.alt_description || result.description || "Unsplash Image";
         const imageLink= document.createElement("a");
-        imageLink.href= result.links.html;
+        // Add Unsplash referral parameters per API guidelines
+        const photoPageUrl = `${result.links.html}?utm_source=ImageSearchApp&utm_medium=referral`;
+        imageLink.href= photoPageUrl;
         imageLink.target= "_blank";
-        imageLink.textContent= result.alt_description;
+        imageLink.rel = "noopener noreferrer";
+        imageLink.textContent= result.alt_description || "View on Unsplash";
+
+        // Build attribution: "Photo by <Photographer> on Unsplash"
+        const photographerName = (result.user && (result.user.name || [result.user.first_name, result.user.last_name].filter(Boolean).join(" "))) || "Unsplash Contributor";
+        const photographerUsername = result.user && result.user.username;
+        const profileUrl = photographerUsername
+            ? `https://unsplash.com/@${photographerUsername}?utm_source=ImageSearchApp&utm_medium=referral`
+            : `https://unsplash.com/?utm_source=ImageSearchApp&utm_medium=referral`;
+        const unsplashUrl = `https://unsplash.com/?utm_source=ImageSearchApp&utm_medium=referral`;
+
+        const attribution = document.createElement("p");
+        attribution.classList.add("attribution");
+        attribution.innerHTML = `Photo by <a href="${profileUrl}" target="_blank" rel="noopener noreferrer">${photographerName}</a> on <a href="${unsplashUrl}" target="_blank" rel="noopener noreferrer">Unsplash</a>`;
 
         imageWrapper.appendChild(image);
         imageWrapper.appendChild(imageLink);
+        imageWrapper.appendChild(attribution);
         searchResultsEl.appendChild(imageWrapper);
     });
 
