@@ -7,6 +7,21 @@ const showMoreBtn= document.querySelector(".show-more-button");
 let inputData="";
 let page=1;
 
+// Track downloads per Unsplash API guidelines
+function trackDownload(result) {
+    try {
+        const downloadLocation = result && result.links && result.links.download_location;
+        if (!downloadLocation) return;
+        const url = downloadLocation.includes("?")
+            ? `${downloadLocation}&client_id=${accesKey}`
+            : `${downloadLocation}?client_id=${accesKey}`;
+        // Fire-and-forget; do not block navigation
+        fetch(url).catch(() => {});
+    } catch (e) {
+        // no-op
+    }
+}
+
 async function searchImages(){
     inputData= inputEl.value;
     const url=`https://api.unsplash.com/search/photos?page=${page}&query=${encodeURIComponent(inputData)}&client_id=${accesKey}`;
@@ -30,6 +45,10 @@ async function searchImages(){
         imageLink.target= "_blank";
         imageLink.rel = "noopener noreferrer";
         imageLink.textContent= result.alt_description || "View on Unsplash";
+
+        // Trigger Unsplash download tracking when user interacts with the photo
+        image.addEventListener("click", () => trackDownload(result));
+        imageLink.addEventListener("click", () => trackDownload(result));
 
         // Build attribution: "Photo by <Photographer> on Unsplash"
         const photographerName = (result.user && (result.user.name || [result.user.first_name, result.user.last_name].filter(Boolean).join(" "))) || "Unsplash Contributor";
