@@ -1,4 +1,4 @@
-const accesKey = "Nff6R1YdMewZK328mLY_sTR6Zp6kXXutO-AIKyoWXmY";
+﻿const accesKey = "Nff6R1YdMewZK328mLY_sTR6Zp6kXXutO-AIKyoWXmY";
 const formEl= document.querySelector("form");
 const inputEl= document.getElementById("search-input");
 const searchResultsEl= document.querySelector(".search-results");
@@ -128,12 +128,14 @@ document.addEventListener("keydown", (e) => {
 
 if (modalDownloadBtn) {
     modalDownloadBtn.addEventListener("click", async () => {
-        if (!currentResult) return;
-        // Track download and then open the download link in a new tab
-        trackDownload(currentResult);
-        const directDownload = currentResult.links && currentResult.links.download;
-        if (directDownload) {
-            window.open(directDownload, "_blank", "noopener,noreferrer");
-        }
-    });
+    if (!currentResult) return;
+    // Track the download per Unsplash guidelines
+    trackDownload(currentResult);
+    try {
+        const downloadLocation = currentResult && currentResult.links && currentResult.links.download_location;
+        if (downloadLocation) {
+            const apiUrl = downloadLocation.includes("?")
+    ? ${downloadLocation}&client_id=
+    : ${downloadLocation}?client_id=;
 }
+
